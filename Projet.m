@@ -76,7 +76,7 @@ title('Signal x(t) en fonction de t');
 
 %3.1.2.4 Tracé de la DSP de x(t) théorique et expérimentale
 DSP_X_Th = DSP_rectangulaire(Nb_echantillons,Fe,x_module);
-figure; % figure 2
+figure; % figure 4
 %subplot(211);
 %ylim([1e-04 10]);
 %xlim([-6000 6000]);
