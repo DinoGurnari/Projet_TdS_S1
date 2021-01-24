@@ -10,7 +10,7 @@ Te = 1/Fe; % Période d'échantillonage en secondes
 Ts = 1/300; % s/bits, le débit souhaité max est de 300 bits/seconde
 
 Ns = floor(Ts/Te); % échantillons/bits, on prend la partie entière, Ts = Ns*Te
-Nb_bits = 300; % Nombre de bits du signal émis
+Nb_bits = 100; % Nombre de bits du signal émis
 Nb_echantillons = Nb_bits*Ns; % Nombre d'échantillons
 
 donnees = randi(0:1, Nb_bits, 1); % Génération de Nb_bits 0 ou 1 de manière aléatoire
