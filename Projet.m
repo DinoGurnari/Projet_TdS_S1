@@ -10,7 +10,7 @@ Te = 1/Fe; % Période d'échantillonage en secondes
 Ts = 1/300; % s/bits, le débit souhaité max est de 300 bits/seconde
 
 Ns = floor(Ts/Te); % échantillons/bits, on prend la partie entière, Ts = Ns*Te
-Nb_bits = 200; % Nombre de bits du signal émis
+Nb_bits = 30; % Nombre de bits du signal émis
 Nb_echantillons = Nb_bits*Ns; % Nombre d'échantillons
 
 donnees = randi(0:1, Nb_bits, 1); % Génération de Nb_bits 0 ou 1 de manière aléatoire
@@ -29,17 +29,16 @@ for i = 1:Nb_bits
 end;
 
 %3.1.1.2 Tracé du signal NRZ(t) en fonction du temps
-figure;
+figure; % figure 1
 plot(T,NRZ);
 ylim([-0.5 1.5]);
 xlabel('t en s');
 ylabel('NRZ(t)');
 title('Signal NRZ(t) en fonction du temps');
 
-%3.1.1.3 Tracé de la DSP de NRZ
-
+%3.1.1.3 Tracé de la DSP de NRZ théorique et expérimentale
 [DSP_NRZ_Th,f] = DSP_rectangulaire(Nb_echantillons,Fe,NRZ);
-figure;
+figure; % figure 2
 subplot(211);
 semilogy(f,DSP_NRZ_Th);
 title('DSP théorique de NRZ en fonction de f');
@@ -50,30 +49,31 @@ subplot(212);
 semilogy(f,DSP_NRZ_Exp);
 title('DSP expérimentale de NRZ en fonction de f');
 
-%DSP_signal = periodogram(signal,[],Nb_points,'centered');
-figure;
-pwelch(NRZ);
+% pwelch à tester plus tard
 
-% %3.1.2.1 Génération du signal x(t) modulé en fréquence
-% 
-% phi0 = rand*2*pi;
-% phi1 = rand*2*pi;
-% 
-% Cos0 = cos(2*pi*F0*T + phi0);
-% Cos1 = cos(2*pi*F1*T + phi1);
-% Un = eye(size(NRZ));
-% 
-% x = (1 - NRZ).*Cos0 + NRZ.*Cos1;
-% 
-% %3.1.2.2
-% 
-% figure;
-% plot(T,x);
-% 
-% %3.1.2.3
-% 
-% %3.1.2.4
-% 
+%3.1.2.1 Génération du signal x(t) modulé en fréquence
+phi0 = rand*2*pi;
+phi1 = rand*2*pi;
+Cos0 = cos(2*pi*F0*T + phi0);
+Cos1 = cos(2*pi*F1*T + phi1);
+%Un = eye(size(NRZ));
+
+x = (1 - NRZ).*Cos0 + NRZ.*Cos1;
+
+%3.1.2.2 Tracé du signal x(t) en fonction du temps
+figure; % figure 3
+plot(T,x);
+ylim([-1.5 1.5]);
+xlabel('t en s');
+ylabel('x(t)');
+title('Signal x(t) en fonction de t');
+
+%3.1.2.3 Calcul de la DSP de x(t) en fonction de la DSP de NRZ
+
+%3.1.2.4 Tracé de la DSP de x(t) théorique et expérimentale
+
+
+
 % S_x = abs(fft(x).^2)/length(x);
 % figure;
 % subplot(411);
