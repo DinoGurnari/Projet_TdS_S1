@@ -129,7 +129,7 @@ ylim([-1.5 1.5]);
 xlim([0.05 0.06]);
 xlabel('t en s');
 ylabel('x(t) sans bruit');
-title('Signal x(t) avant ajout du bruit en fonction de t');
+title('Signal x(t) avant ajout du bruit en fonction du temps pour SNR = 10');
 
 subplot(212);
 plot(T,x_bruite);
@@ -137,7 +137,7 @@ ylim([-1.5 1.5]);
 xlim([0.05 0.06]);
 xlabel('Temps (secondes)');
 ylabel('x bruite');
-title('Tracé du signal x bruite en fonction du temps');
+title('Tracé du signal x bruite en fonction du temps pour SNR = 10');
 
 %3.3 Démodulation par filtrage
 
