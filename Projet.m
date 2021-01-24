@@ -40,17 +40,17 @@ title('Signal NRZ(t) en fonction du temps');
 [DSP_NRZ_Th,f] = DSP_rectangulaire(Nb_echantillons,Fe,NRZ);
 figure; % figure 2
 subplot(211);
-xlabel('f en Hz');
-ylabel('DSP_NRZ_Th(f)');
 semilogy(f,DSP_NRZ_Th);
+xlabel('f en Hz');
+ylabel('DSP NRZ Th(f)');
 title('DSP théorique de NRZ en fonction de f');
 
 DSP_NRZ_Exp = (Ts*sinc(pi*f*Ts).^2 + dirac(f))/4;
 %figure;
 subplot(212);
-xlabel('f en Hz');
-ylabel('DSP_NRZ_Exp(f)');
 semilogy(f,DSP_NRZ_Exp);
+xlabel('f en Hz');
+ylabel('DSP NRZ Exp(f)');
 title('DSP expérimentale de NRZ en fonction de f');
 
 % pwelch à tester plus tard
@@ -77,13 +77,14 @@ title('Signal x(t) en fonction de t');
 %3.1.2.4 Tracé de la DSP de x(t) théorique et expérimentale
 DSP_X_Th = DSP_rectangulaire(Nb_echantillons,Fe,x_module);
 figure; % figure 4
-%subplot(211);
+subplot(211);
 %ylim([1e-04 10]);
 %xlim([-6000 6000]);
-xlabel('f en Hz');
-ylabel('DSP_X_Th(f)');
 semilogy(f,DSP_X_Th);
+xlabel('f en Hz');
+ylabel('DSP X Th(f)');
 title('DSP X théorique en fonction de f');
+
 
 % S_x = abs(fft(x).^2)/length(x);
 % figure;
