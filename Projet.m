@@ -86,24 +86,34 @@ ylabel('DSP X Th(f)');
 title('DSP X théorique en fonction de f');
 
 
-% S_x = abs(fft(x).^2)/length(x);
-% figure;
-% subplot(411);
-% semilogy(S_x);
-% subplot(412);
-% pwelch(x);
-% 
-% %3.3.1 Filtre passe-bas
-% 
-% g = Fe*(1:length(x))/length(x);
-% fc = 2500; %Hz
-% intervalle = [-100*Te:Te:100*Te];
-% 
-% figure;
-% h = (2*fc/Fe)*sinc(2*fc*intervalle);
-% H = 50*fft(h);
-% z = filter(H,[1],x);
-% Z = abs(fft(z));
-% plot(intervalle,H);
-% 
-% %3.3.2 Filtre passe-haut
+S_x = abs(fft(x_module).^2)/length(x_module);
+figure;
+subplot(411);
+semilogy(S_x);
+subplot(412);
+pwelch(x_module);
+
+%3.3.1 Filtre passe-bas
+ordre = 60;
+g = Fe*(1:length(x_module))/length(x_module);
+fc = 2500; %Hz
+intervalle = (-ordre*Te:Te:ordre*Te);
+
+figure;
+h = (2*fc/Fe)*sinc(2*fc*intervalle);
+H_passe_bas = abs(fftshift(fft(h)));
+Freq = (-(2*ordre+1)/2:(2*ordre+1)/2-1)*(Fe/(2*ordre+1));
+z = filter(H_passe_bas,[1],x_module);
+Z = abs(fft(z));
+plot(Freq,H_passe_bas);
+% plot(g, abs(fft(x_module)));
+% hold on;
+% plot(g, Z);
+%plot(T,z);
+
+%3.3.2 Filtre passe-haut
+H_passe_haut = 1 - H_passe_bas;
+y = filter(H_passe_haut,[1],x_module);
+figure;
+plot(Freq, H_passe_haut);
+% plot(T,y);
