@@ -10,7 +10,7 @@ Te = 1/Fe; % Période d'échantillonage en secondes
 Ts = 1/300; % s/bits, le débit souhaité max est de 300 bits/seconde
 
 Ns = floor(Ts/Te); % échantillons/bits, on prend la partie entière, Ts = Ns*Te
-Nb_bits = 30; % Nombre de bits du signal émis
+Nb_bits = 300; % Nombre de bits du signal émis
 Nb_echantillons = Nb_bits*Ns; % Nombre d'échantillons
 
 donnees = randi(0:1, Nb_bits, 1); % Génération de Nb_bits 0 ou 1 de manière aléatoire
@@ -40,12 +40,16 @@ title('Signal NRZ(t) en fonction du temps');
 [DSP_NRZ_Th,f] = DSP_rectangulaire(Nb_echantillons,Fe,NRZ);
 figure; % figure 2
 subplot(211);
+xlabel('f en Hz');
+ylabel('DSP_NRZ_Th(f)');
 semilogy(f,DSP_NRZ_Th);
 title('DSP théorique de NRZ en fonction de f');
 
 DSP_NRZ_Exp = (Ts*sinc(pi*f*Ts).^2 + dirac(f))/4;
 %figure;
 subplot(212);
+xlabel('f en Hz');
+ylabel('DSP_NRZ_Exp(f)');
 semilogy(f,DSP_NRZ_Exp);
 title('DSP expérimentale de NRZ en fonction de f');
 
@@ -58,11 +62,11 @@ Cos0 = cos(2*pi*F0*T + phi0);
 Cos1 = cos(2*pi*F1*T + phi1);
 %Un = eye(size(NRZ));
 
-x = (1 - NRZ).*Cos0 + NRZ.*Cos1;
+x_module = (1 - NRZ).*Cos0 + NRZ.*Cos1;
 
 %3.1.2.2 Tracé du signal x(t) en fonction du temps
 figure; % figure 3
-plot(T,x);
+plot(T,x_module);
 ylim([-1.5 1.5]);
 xlabel('t en s');
 ylabel('x(t)');
@@ -71,8 +75,15 @@ title('Signal x(t) en fonction de t');
 %3.1.2.3 Calcul de la DSP de x(t) en fonction de la DSP de NRZ
 
 %3.1.2.4 Tracé de la DSP de x(t) théorique et expérimentale
-
-
+DSP_X_Th = DSP_rectangulaire(Nb_echantillons,Fe,x_module);
+figure; % figure 2
+%subplot(211);
+%ylim([1e-04 10]);
+%xlim([-6000 6000]);
+xlabel('f en Hz');
+ylabel('DSP_X_Th(f)');
+semilogy(f,DSP_X_Th);
+title('DSP X théorique en fonction de f');
 
 % S_x = abs(fft(x).^2)/length(x);
 % figure;
