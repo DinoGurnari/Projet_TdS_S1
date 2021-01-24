@@ -142,26 +142,29 @@ title('Tracé du signal x bruite en fonction du temps pour SNR = 10');
 %3.3 Démodulation par filtrage
 
 %3.3.1 Filtre passe-bas
-% ordre = 60;
-% g = Fe*(1:length(x_module))/length(x_module);
-% fc = 2500; %Hz
-% intervalle = (-ordre*Te:Te:ordre*Te);
-% 
-% figure;
-% h = (2*fc/Fe)*sinc(2*fc*intervalle);
-% H_passe_bas = abs(fftshift(fft(h)));
-% Freq = (-(2*ordre+1)/2:(2*ordre+1)/2-1)*(Fe/(2*ordre+1));
-% z = filter(H_passe_bas,[1],x_module);
-% Z = abs(fft(z));
+ordre = 60;
+g = Fe*(1:length(x_module))/length(x_module);
+fc = 4000; %Hz
+intervalle = (-ordre*Te:Te:ordre*Te);
+
+figure;
+h = (2*fc/Fe)*sinc(2*fc*intervalle);
+H_passe_bas = abs(fftshift(fft(h)));
+Freq = (-(2*ordre+1)/2:(2*ordre+1)/2-1)*(Fe/(2*ordre+1));
+z = filter(h,[1],x_module);
+Z = abs(fft(z));
 % plot(Freq,H_passe_bas);
 % plot(g, abs(fft(x_module)));
 % hold on;
 % plot(g, Z);
-%plot(T,z);
+plot(T,z);
 
 %3.3.2 Filtre passe-haut
-% H_passe_haut = 1 - H_passe_bas;
-% y = filter(H_passe_haut,[1],x_module);
-% figure;
+H_passe_haut = 1 - H_passe_bas;
+h_passe_haut = - h;
+h_passe_haut(ordre+1) = h_passe_haut(ordre+1) + 1;
+y = filter(h_passe_haut,[1],x_module);
+figure;
 % plot(Freq, H_passe_haut);
-% plot(T,y);
+% plot(intervalle, h_passe_haut);
+plot(T,y);
