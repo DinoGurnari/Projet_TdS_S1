@@ -237,3 +237,26 @@ title('DSP Y en fonction de f');
 % plot(T,y_passe_haut);
 % ylim([-1.5 1.5]);
 % xlim([0.01 0.03]);
+%3.3.5 Détection d'énergie
+
+K = 0.25*Ns;
+detect_passe_bas = zeros(Nb_bits,1);
+detect_passe_haut = zeros(Nb_bits,1);
+
+for i = 1:Nb_bits
+    xi_bas = 0;
+    xi_haut = 0;
+    for j = 1:Ns
+        xi_bas = xi_bas + y_passe_bas(i*j)^2;
+        xi_haut = xi_haut + y_passe_haut(i*j)^2;
+    end
+    if xi_bas > K
+        detect_passe_bas(i) = 1;
+    end
+    if xi_haut > K
+        detect_passe_haut(i) = 1;
+    end
+end
+donnees
+detect_passe_bas
+detect_passe_haut
