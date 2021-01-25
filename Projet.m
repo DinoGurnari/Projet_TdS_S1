@@ -176,72 +176,58 @@ title('Reponse fréquentielle du filtre passe bas');
 %ylim([-1.5 1.5]);
 %xlim([0.01 0.03]);
 
-%3.3.4.2 Tracés DSP de x(t) et y(t)
-DSP_Y_passe_bas = DSP_rectangulaire(Nb_echantillons,Fe,y_passe_bas,0);
-DSP_Y_passe_haut = DSP_rectangulaire(Nb_echantillons,Fe,y_passe_haut,0);
-
+%3.3.4.2 Tracés DSP de x(t) et réponse fréquentielle du filtre
 figure; % figure 8 - DSP x(t) et y(t)
-subplot(311);
 semilogy(f,DSP_X_Th);
-ylim([1e-05 100]);
-xlim([-7000 7000]);
+ylim([1e-05 50]);
+xlim([-10000 10000]);
 xlabel('f en Hz');
 ylabel('DSP X Th(f)');
 title('DSP X théorique en fonction de f');
 
-subplot(312);
+hold on;
+semilogy(Ffiltre,H_passe_bas);
+ylim([1e-05 50]);
+xlim([-10000 10000]);
+
+%3.3.4.3 
+figure; % figure 9 - y(t) et DSP_y(t)
+subplot(211);
+plot(T,y_passe_bas);
+ylim([-1.5 1.5]);
+xlim([0.1 0.15]);
+
+DSP_Y_passe_bas = DSP_rectangulaire(Nb_echantillons,Fe,y_passe_bas,0);
+subplot(212);
 semilogy(f,DSP_Y_passe_bas);
-ylim([1e-05 100]);
-xlim([-7000 7000]);
-xlabel('f en Hz');
-ylabel('DSP Y passe bas(f)');
-title('DSP Y passe bas en fonction de f');
+ylim([1e-2 100]);
+xlim([-8000 8000]);
 
-subplot(313);
-semilogy(f,DSP_Y_passe_haut);
-ylim([1e-05 100]);
-xlim([-7000 7000]);
-xlabel('f en Hz');
-ylabel('DSP Y passe haut(f)');
-title('DSP Y passe haut en fonction de f');
-
-% numéro à changer 
-figure; % figure 7 - passe bas
-subplot(211);
-plot(T,x_module);
-ylim([-1.5 1.5]);
-xlim([0.01 0.03]);
-
-subplot(212);
-plot(T,y_passe_bas);
-ylim([-1.5 1.5]);
-xlim([0.01 0.03]);
-
-figure; % figure 8 - passe haut
-subplot(211);
-plot(T,x_module);
-ylim([-1.5 1.5]);
-xlim([0.01 0.03]);
-
-subplot(212);
-plot(T,y_passe_haut);
-ylim([-1.5 1.5]);
-xlim([0.01 0.03]);
-% plot(Freq, H_passe_haut);
-% plot(intervalle, h_passe_haut);
-
-figure; % figure 9 - passe haut et bas
-subplot(311);
-plot(T,x_module);
-ylim([-1.5 1.5]);
-xlim([0.01 0.03]);
-
-subplot(312);
-plot(T,y_passe_bas);
-ylim([-1.5 1.5]);
-xlim([0.01 0.03]);
-
-subplot(313);
-plot(T,y_passe_haut);
-ylim([-1.5 1.5]);
-xlim([0.01 0.03]);
+% figure; % figure 8 - passe haut
+% subplot(211);
+% plot(T,x_module);
+% ylim([-1.5 1.5]);
+% xlim([0.01 0.03]);
+% 
+% subplot(212);
+% plot(T,y_passe_haut);
+% ylim([-1.5 1.5]);
+% xlim([0.01 0.03]);
+% % plot(Freq, H_passe_haut);
+% % plot(intervalle, h_passe_haut);
+% 
+% figure; % figure 9 - passe haut et bas
+% subplot(311);
+% plot(T,x_module);
+% ylim([-1.5 1.5]);
+% xlim([0.01 0.03]);
+% 
+% subplot(312);
+% plot(T,y_passe_bas);
+% ylim([-1.5 1.5]);
+% xlim([0.01 0.03]);
+% 
+% subplot(313);
+% plot(T,y_passe_haut);
+% ylim([-1.5 1.5]);
+% xlim([0.01 0.03]);
