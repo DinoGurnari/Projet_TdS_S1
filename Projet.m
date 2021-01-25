@@ -1,7 +1,7 @@
 clear all
 close all
 clc
-
+load DonneesBinome1;
 % Paramètres
 F0 = 6000; % Fréquence bits 0 en Hz
 F1 = 2000; % Fréquence bits 1 en Hz
@@ -10,11 +10,12 @@ Te = 1/Fe; % Période d'échantillonage en secondes
 Ts = 1/300; % s/bits, le débit souhaité max est de 300 bits/seconde
 
 Ns = floor(Ts/Te); % échantillons/bits, on prend la partie entière, Ts = Ns*Te
-Nb_bits = 100; % Nombre de bits du signal émis
+Nb_bits = length(bits); % Nombre de bits du signal émis
 Nb_echantillons = Nb_bits*Ns; % Nombre d'échantillons
 Null = 2000;
 
-donnees = randi(0:1, Nb_bits, 1); % Génération de Nb_bits 0 ou 1 de manière aléatoire
+% donnees = randi(0:1, Nb_bits, 1); % Génération de Nb_bits 0 ou 1 de manière aléatoire
+donnees = bits;
 NRZ = zeros(Nb_echantillons,1); % Initialisation du signal NRZ avec Nb_echantillons echantillons
 T = ([0:Nb_echantillons-1]*Te)'; % Le signal est tracé de 0 à (Nb_echantillons-1)*Te secondes,
                                  % avec un pas de Te
@@ -151,14 +152,14 @@ fnorm = fc/Fe;
 Tfiltre = (-ordre*Te:Te:ordre*Te);
 Ffiltre = (-(2*ordre+1)/2:(2*ordre+1)/2-1)*(Fe/(2*ordre+1));
 h_passe_bas = (2*fnorm)*sinc(2*fc*Tfiltre);
-y_passe_bas = filter(h_passe_bas,(1),x_module);
+y_passe_bas = filter(h_passe_bas,(1),x_bruite);
 H_passe_bas = abs(fftshift(fft(h_passe_bas)));
 
 %3.3.2 Filtre passe-haut
 %H_passe_haut = 1 - H_passe_bas;
 h_passe_haut = - h_passe_bas;
 h_passe_haut(ordre+1) = h_passe_haut(ordre+1) + 1;
-y_passe_haut = filter(h_passe_haut,(1),x_module);
+y_passe_haut = filter(h_passe_haut,(1),x_bruite);
 
 %3.3.3 Filtrage ok + manque prise en compte du retard
 
@@ -237,20 +238,23 @@ title('DSP Y en fonction de f');
 % plot(T,y_passe_haut);
 % ylim([-1.5 1.5]);
 % xlim([0.01 0.03]);
+
 %3.3.5 Détection d'énergie
 
-K = 0.25*Ns;
+K = 0.27*Ns;
 
 detect_passe_bas = zeros(Nb_bits,1);
 detect_passe_haut = ones(Nb_bits,1);
-
+% On parcourt tous les bits
 for i = 1:Nb_bits
     xi_bas = 0;
     xi_haut = 0;
     for j = 1:Ns
+        % On calcul la somme des carrés
         xi_bas = xi_bas + y_passe_bas((i-1)*Ns + j)^2;
         xi_haut = xi_haut + y_passe_haut((i-1)*Ns + j)^2;
     end
+    % On compare avec le seuil K
     if xi_bas > K
         detect_passe_bas(i) = 1;
     end
@@ -258,5 +262,16 @@ for i = 1:Nb_bits
         detect_passe_haut(i) = 0;
     end
 end
-sum((donnees - detect_passe_bas).^2)
-sum((donnees - detect_passe_haut).^2)
+
+% Calcul de l'erreur
+erreur_passe_bas = sum((transpose(donnees) - detect_passe_bas)).^2;
+erreur_passe_haut = sum((transpose(donnees) - detect_passe_haut)).^2;
+erreur = mean(erreur_passe_bas, erreur_passe_haut)
+
+% Reconstitution image
+
+suite_binaire_reconstruite = detect_passe_bas;
+
+pcode reconstitution_image;
+reconstitution_image(suite_binaire_reconstruite) ;
+which reconstitution_image;
