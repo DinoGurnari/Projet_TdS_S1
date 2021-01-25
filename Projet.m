@@ -11,10 +11,11 @@ Ts = 1/300; % s/bits, le débit souhaité max est de 300 bits/seconde
 
 Ns = floor(Ts/Te); % échantillons/bits, on prend la partie entière, Ts = Ns*Te
 Nb_bits = length(bits); % Nombre de bits du signal émis
+%Nb_bits = 100;
 Nb_echantillons = Nb_bits*Ns; % Nombre d'échantillons
 Null = 2000;
 
-% donnees = randi(0:1, Nb_bits, 1); % Génération de Nb_bits 0 ou 1 de manière aléatoire
+%donnees = randi(0:1, Nb_bits, 1); % Génération de Nb_bits 0 ou 1 de manière aléatoire
 donnees = bits;
 NRZ = zeros(Nb_echantillons,1); % Initialisation du signal NRZ avec Nb_echantillons echantillons
 T = ([0:Nb_echantillons-1]*Te)'; % Le signal est tracé de 0 à (Nb_echantillons-1)*Te secondes,
@@ -46,7 +47,7 @@ DSP_NRZ_Exp = (Ts*sinc(pi*f*Ts).^2 + dirac(f))/4;
 figure; % figure 2
 subplot(211);
 semilogy(f,DSP_NRZ_Th);
-ylim([1e-06 1000]);
+ylim([1e-02 100]);
 xlim([-2000 2000]);
 xlabel('f en Hz');
 ylabel('DSP NRZ Th(f)');
@@ -54,7 +55,7 @@ title('DSP théorique de NRZ en fonction de f');
 
 subplot(212);
 semilogy(f,DSP_NRZ_Exp);
-ylim([1e-10 1e-2]);
+ylim([1e-6 1e-2]);
 xlim([-2000 2000]);
 xlabel('f en Hz');
 ylabel('DSP NRZ Exp(f)');
@@ -105,12 +106,7 @@ subplot(212);
 % ylabel('DSP X Exp(f)');
 % title('DSP X expérimental en fonction de f');
 
-% S_x = abs(fft(x_module).^2)/length(x_module);
-% figure; 
-% subplot(411);
-% semilogy(S_x);
-% subplot(412);
-% pwelch(x_module);
+
 
 %3.2 Canal de transmission à bruit additif, blanc et Gaussien
 Px = mean(abs(x_module).^2);
@@ -143,6 +139,15 @@ xlabel('Temps (secondes)');
 ylabel('x bruite');
 title('Tracé du signal x bruite en fonction du temps pour SNR = 10');
 
+DSP_X_bruite = DSP_rectangulaire(Nb_echantillons,Fe,x_bruite,0);
+figure; % figure 6 bis
+semilogy(f,DSP_X_Th);
+ylim([1e-01 50]);
+xlim([-7000 7000]);
+xlabel('f en Hz');
+ylabel('DSP X bruite(f)');
+title('DSP X bruite en fonction de f');
+
 %3.3 Démodulation par filtrage
 
 %3.3.1 Filtre passe-bas
@@ -156,7 +161,7 @@ y_passe_bas = filter(h_passe_bas,(1),x_bruite);
 H_passe_bas = abs(fftshift(fft(h_passe_bas)));
 
 %3.3.2 Filtre passe-haut
-%H_passe_haut = 1 - H_passe_bas;
+H_passe_haut = 1 - H_passe_bas;
 h_passe_haut = - h_passe_bas;
 h_passe_haut(ordre+1) = h_passe_haut(ordre+1) + 1;
 y_passe_haut = filter(h_passe_haut,(1),x_bruite);
@@ -178,7 +183,7 @@ title('Reponse fréquentielle du filtre passe bas');
 xlim([-9000 9000]);
 
 %3.3.4.2 Tracés DSP de x(t) et réponse fréquentielle du filtre
-figure; % figure 8 - DSP x(t) et y(t)
+figure; % figure 8 - DSP x(t) et y(t) passe bas
 semilogy(f,DSP_X_Th);
 ylim([1e-2 30]);
 xlim([-8000 8000]);
@@ -191,8 +196,21 @@ semilogy(Ffiltre,H_passe_bas);
 ylim([1e-02 30]);
 xlim([-9000 9000]);
 
+figure; % figure 8 bis - DSP x(t) et y(t) passe haut
+semilogy(f,DSP_X_Th);
+ylim([1e-2 30]);
+xlim([-8000 8000]);
+xlabel('f en Hz');
+ylabel('DSP X Th(f)');
+title('DSP X théorique en fonction de f');
+
+hold on;
+semilogy(Ffiltre,H_passe_haut);
+ylim([1e-02 30]);
+xlim([-9000 9000]);
+
 %3.3.4.3 
-figure; % figure 9 - y(t) et DSP_y(t)
+figure; % figure 9 - y(t) et DSP_y(t) passe bas
 subplot(211);
 plot(T,y_passe_bas);
 ylim([-1.5 1.5]);
@@ -210,34 +228,24 @@ xlabel('f en Hz');
 ylabel('DSP Y (f)');
 title('DSP Y en fonction de f');
 
-% figure; % figure 8 - passe haut
-% subplot(211);
-% plot(T,x_module);
-% ylim([-1.5 1.5]);
-% xlim([0.01 0.03]);
-% 
-% subplot(212);
-% plot(T,y_passe_haut);
-% ylim([-1.5 1.5]);
-% xlim([0.01 0.03]);
-% % plot(Freq, H_passe_haut);
-% % plot(intervalle, h_passe_haut);
-% 
-% figure; % figure 9 - passe haut et bas
-% subplot(311);
-% plot(T,x_module);
-% ylim([-1.5 1.5]);
-% xlim([0.01 0.03]);
-% 
-% subplot(312);
-% plot(T,y_passe_bas);
-% ylim([-1.5 1.5]);
-% xlim([0.01 0.03]);
-% 
-% subplot(313);
-% plot(T,y_passe_haut);
-% ylim([-1.5 1.5]);
-% xlim([0.01 0.03]);
+figure; % figure 9 bis - y(t) et DSP_y(t) passe haut
+subplot(211);
+plot(T,y_passe_haut);
+ylim([-1.5 1.5]);
+xlim([0.1 0.15]);
+xlabel('t en secondes');
+ylabel('y(t) signal filtré');
+title('Signal y(t) filtré en fonction du temps');
+
+DSP_Y_passe_haut = DSP_rectangulaire(Nb_echantillons,Fe,y_passe_haut,0);
+subplot(212);
+semilogy(f,DSP_Y_passe_haut);
+ylim([1e-2 100]);
+xlim([-8000 8000]);
+xlabel('f en Hz');
+ylabel('DSP Y (f)');
+title('DSP Y en fonction de f');
+
 
 %3.3.5 Détection d'énergie
 
