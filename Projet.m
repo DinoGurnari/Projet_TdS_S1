@@ -196,12 +196,18 @@ subplot(211);
 plot(T,y_passe_bas);
 ylim([-1.5 1.5]);
 xlim([0.1 0.15]);
+xlabel('t en secondes');
+ylabel('y(t) signal filtré');
+title('Signal y(t) filtré en fonction du temps');
 
 DSP_Y_passe_bas = DSP_rectangulaire(Nb_echantillons,Fe,y_passe_bas,0);
 subplot(212);
 semilogy(f,DSP_Y_passe_bas);
 ylim([1e-2 100]);
 xlim([-8000 8000]);
+xlabel('f en Hz');
+ylabel('DSP Y (f)');
+title('DSP Y en fonction de f');
 
 % figure; % figure 8 - passe haut
 % subplot(211);
